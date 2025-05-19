@@ -12,9 +12,9 @@
     * **Crucially, relies on the neural network model (matrices `[I]`, `[J]`, and lists `L₄`, `L₅`) being present in the calculator's RAM.** These files are created from CSVs using tools like SourceCoder/TokenIDE and then transferred by the user.
 
 2.  **Python Scripts (for PC-based operations):**
-    * **`actrain_4_60_12.py` (Trainer):** Trains the 4-60-12 neural network model. Outputs verbose TI-BASIC style weight assignments (for the CSV converter) and can save/load weights in NumPy's `.npz` format.
-    * **`ti_weights_to_csv.py` (CSV Exporter):** Converts the verbose weight file from the trainer into separate `.csv` files for matrices `[I]`, `[J]`, and lists `L₄`, `L₅`.
-    * **`nn_visualizer_script.py` (Visualizer):** Reads the verbose weight file to visualize the network's structure and letter-word activation associations.
+    * **`train.py` (Trainer):** Trains the 4-60-12 neural network model. Outputs verbose TI-BASIC style weight assignments (for the CSV converter) and can save/load weights in NumPy's `.npz` format.
+    * **`weights_to_csv.py` (CSV Exporter):** Converts the verbose weight file from the trainer into separate `.csv` files for matrices `[I]`, `[J]`, and lists `L₄`, `L₅`.
+    * **`visualizer_script.py` (Visualizer):** Reads the verbose weight file to visualize the network's structure and letter-word activation associations.
     * *(The previous compression script is no longer used in this workflow.)*
 
 **Target Word Categories (12 words):**
@@ -22,7 +22,7 @@
 
 ## Core Functionality and Input Robustness
 
-When trained extensively using `actrain_4_60_12.py` with its data augmentation features, Hermes Optimus exhibits significant robustness:
+When trained extensively using `train.py` with its data augmentation features, Hermes Optimus exhibits significant robustness:
 
 * **High Tolerance to Typos:** Often correctly classifies words despite multiple incorrect letters.
 * **Anagram / Scrambled Letter Recognition:** Can frequently identify the correct category even with mixed letter order.
@@ -45,15 +45,15 @@ The degree of this robustness is directly correlated with the comprehensiveness 
 
 ### Python Scripts
 
-1.  **`actrain_4_60_12.py` (Trainer):**
+1.  **`train.py` (Trainer):**
     * Trains the 4-60-12 neural network.
     * Configurable learning rate and epochs.
-    * Outputs verbose TI-BASIC style weight assignments (e.g., `nn_weights_4_60_12_verbose.txt`) which serve as input for `ti_weights_to_csv.py`.
+    * Outputs verbose TI-BASIC style weight assignments (e.g., `nn_weights_4_60_12_verbose.txt`) which serve as input for `weights_to_csv.py`.
     * Can save/load weights in NumPy's `.npz` format for Python-side persistence and re-testing (e.g., `nn_model_4_60_12.npz`).
     * Implements data augmentation (numerical noise, word scrambling).
     * Includes a testing phase to evaluate model accuracy against ~40 scrambled words.
 
-2.  **`ti_weights_to_csv.py` (CSV Exporter):**
+2.  **`weights_to_csv.py` (CSV Exporter):**
     * Reads the verbose TI-BASIC weight file from the trainer.
     * Outputs four `.csv` files: `prefix_weights_I.csv`, `prefix_weights_J.csv`, `prefix_bias_L4.csv`, `prefix_bias_L5.csv`. These are crucial for the new loading workflow.
 
@@ -67,19 +67,19 @@ The degree of this robustness is directly correlated with the comprehensiveness 
 * **Data Management:** Instead of complex string compression and on-calculator decompression, this version uses a more robust method:
     1.  Weights are trained on PC.
     2.  Converted to CSV files.
-    3.  CSVs are converted to standard TI Matrix (`.8xm`) and List (`.8xl`) files using tools like Cemetech's SourceCoder or TokenIDE.
+    3.  CSVs are converted to standard TI Matrix (`.8xm`) and List (`.8xl`) files using tools like Cemetech's SourceCoder.
     4.  These native TI files, along with the main program, are transferred to the calculator.
 * **Memory Efficiency:**
-    * The main program file (`HERMES OPTIMUS.8xp`) is smaller as it no longer contains embedded data strings for weights. This reduces the chance of `ERR:MEMORY` *when loading the program/App itself*.
-    * The calculator's RAM will be used to store the actual matrices `[I]`, `[J]` and lists `L₄`, `L₅` (approx. 10-12KB for a 4-60-12 network). This is generally more stable than manipulating very large strings in RAM.
+    * The main program file (`HERMES OPTIMUS.8xp`) is smaller as it no longer contains embedded data strings for weights. This removes the `ERR:MEMORY` *when loading the program/App itself*.
+    * The calculator's RAM will be used to store the actual matrices `[I]`, `[J]` and lists `L₄`, `L₅` (approx. 12KB for a 4-60-12 network). This is more stable than manipulating very large strings in RAM.
 
 ## System Requirements
 
 ### TI-84 Program:
 
-* **Calculator:** TI-84 Plus CE, TI-84 Plus C Silver Edition, or compatible TI-84 Plus series model.
+* **Calculator:** TI-84 Plus Silver Edition or compatible TI-84 Plus series model.
 * **Transfer Software:** TI Connect™ CE software.
-* **Calculator Memory:** Sufficient free RAM to hold the program, matrices `[I]` (~2.4KB), `[J]` (~8.6KB), lists `L₄` (~0.6KB), `L₅` (~0.1KB), and other operational variables. Total data ~11.7KB.
+* **Calculator Memory:** Sufficient free RAM to hold the program, matrices `[I]` (~2.4KB), `[J]` (~8.6KB), lists `L₄` (~0.6KB), `L₅` (~0.1KB), and other operational variables. Total data ~17KB.
 
 ### Python Scripts:
 
@@ -91,15 +91,15 @@ The degree of this robustness is directly correlated with the comprehensiveness 
 ### TI-84 Program ("Hermes Optimus"):
 
 1.  **Obtain Program:** Get the `HERMES OPTIMUS.8xp` file (this should have the simplified `Lbl P` that expects matrices/lists to be in RAM).
-2.  **Prepare Matrix/List Files:** Follow **Steps 1-3** in the "Usage Instructions & Workflow" section below to generate `[I].8xm`, `[J].8xm`, `L4.8xl`, and `L5.8xl` files.
+2.  **Prepare Matrix/List Files:** Follow **Steps 1-3** in the "Usage Instructions & Workflow" section below to generate `[I].8xm`, `[J].8xm`, `L4.8xl`, and `L5.8xl` files or download the pretrained versions provided with Hermes Optimus.
 3.  **Transfer ALL Files:** Using TI Connect™ CE:
-    * Click the "Calculator Explorer" icon (often looks like two pages or a folder icon on the left toolbar).
+    * Click the "Calculator Explorer" icon (looks like two pages on the left toolbar).
     * Navigate to a desired location on your calculator in the right-hand pane (RAM or Archive).
     * Drag and drop `HERMES OPTIMUS.8xp`, `[I].8xm`, `[J].8xm`, `L4.8xl`, and `L5.8xl` from your computer into the TI Connect CE window for your calculator. Ensure all files are sent.
 
 ### Python Scripts:
 
-1.  **Download:** Obtain `actrain_4_60_12.py`, `ti_weights_to_csv.py`, and `nn_visualizer_script.py`.
+1.  **Download:** Obtain `train.py`, `weights_to_csv.py`, and `visualizer_script.py`.
 2.  **Install Python 3 & Libraries:** (As described in the previous README version).
 
 ## Usage Instructions & Workflow
@@ -108,19 +108,19 @@ This workflow details training, preparing data via CSVs and SourceCoder/TokenIDE
 
 **Step 1: Train the Neural Network Model (PC)**
 
-* Use `actrain_4_60_12.py`.
+* Use `train.py`.
 * **Command Example:**
     ```bash
-    python actrain_4_60_12.py --epochs 75000 --lr 0.005 --output_verbose_ti nn_weights_4_60_12_verbose.txt --save_numpy_weights nn_model_4_60_12.npz --test
+    python train.py --epochs 500000 --lr 0.01 --test
     ```
 * **Key Output:** `nn_weights_4_60_12_verbose.txt` (and optionally `nn_model_4_60_12.npz`).
 
 **Step 2: Convert Verbose Weights to CSV Files (PC)**
 
-* Use `ti_weights_to_csv.py`.
+* Use `weights_to_csv.py`.
 * **Command Example:**
     ```bash
-    python ti_weights_to_csv.py nn_weights_4_60_12_verbose.txt --output_dir hermes_csv_data --prefix hermes_model
+    python weights_to_csv.py nn_weights_4_60_12_verbose.txt --output_dir hermes_csv_data --prefix hermes_model
     ```
 * **Output:** This will create a directory (e.g., `hermes_csv_data`) containing:
     * `hermes_model_weights_I.csv`
@@ -128,11 +128,10 @@ This workflow details training, preparing data via CSVs and SourceCoder/TokenIDE
     * `hermes_model_bias_L4.csv`
     * `hermes_model_bias_L5.csv`
 
-**Step 3: Convert CSV Files to TI Calculator Files (PC - Using SourceCoder/TokenIDE)**
+**Step 3: Convert CSV Files to TI Calculator Files (PC - Using SourceCoder)**
 
-1.  **Open SourceCoder or TokenIDE:** These tools can import CSV data into TI data types.
+1.  **Open SourceCoder:** This tools can import CSV data into TI data types.
     * **SourceCoder (Web):** Go to [Cemetech's SourceCoder](https://www.cemetech.net/sc/).
-    * **TokenIDE (Desktop):** Download and install from [Cemetech](https://www.cemetech.net/projects/tokenide/).
 2.  **Import CSV and Export as TI Files:**
     * **For Matrix `[I]`:**
         * In SourceCoder/TokenIDE, find the option to create/import a matrix.
@@ -151,7 +150,7 @@ This workflow details training, preparing data via CSVs and SourceCoder/TokenIDE
         * Import `hermes_model_bias_L5.csv`.
         * Ensure it's a list with 12 elements.
         * Save/Export this list as `L5.8xl`. (The name on the calculator should be `L₅`).
-    * **Naming:** When saving/exporting from SourceCoder/TokenIDE, ensure the filenames are exactly `[I].8xm`, `[J].8xm`, `L4.8xl`, and `L5.8xl` so the TI-BASIC program can find them by their default system names (`[I]`, `[J]`, `L₄`, `L₅`) once on the calculator.
+    * **Naming:** When saving/exporting from SourceCoder, ensure the filenames are exactly `[I].8xm`, `[J].8xm`, `L4.8xl`, and `L5.8xl` so the TI-BASIC program can find them by their default system names (`[I]`, `[J]`, `L₄`, `L₅`) once on the calculator.
 
 **Step 4: Transfer Program and Data Files to Calculator**
 
@@ -169,17 +168,16 @@ This workflow details training, preparing data via CSVs and SourceCoder/TokenIDE
 
 **Step 5: Use Hermes Optimus on the Calculator**
 
-1.  **Run Program:** On your TI-84, press `[prgm]`, select `HERMESOPTI` (or the name it appears as), and press `[enter]`.
+1.  **Run Program:** On your TI-84, press `[prgm]`, select `HERMES14`, and press `[enter]`.
 2.  **Main Menu:** Select `CONTINUE`.
 3.  **Classifier Menu:**
-    * **`LOADPRETRAIN` (Lbl P):** Select this first. This routine in the TI-BASIC program is now very simple. It primarily serves to ensure the program is aware that the model data should be available directly as matrices `[I]`, `[J]` and lists `L₄`, `L₅` in RAM. It might perform a quick check or simply set a flag. *No complex decompression occurs here anymore.*
-    * `CLASSIFY`: After "loading," select this to input a 4-letter word. The program will use the matrices and lists directly from RAM.
+    * `CLASSIFY`: Select this to input a 4-letter word. The program will use the matrices and lists directly from RAM.
     * `ABOUT`: Displays program information.
     * `EXIT`: Exits the program.
 
 **Step 6 (Optional): Visualize or Further Analyze Weights on PC**
 
-* Use `nn_visualizer_script.py` or the CSV files as needed.
+* Use `visualizer_script.py` with the command `python visualize.py nn_weights_4_60_12_verbose.txt --mode letter_heatmap`.
 
 ## Technical Specifications
 
@@ -192,9 +190,8 @@ This workflow details training, preparing data via CSVs and SourceCoder/TokenIDE
 
 * **`ERR:MEMORY` on Calculator:**
     * If it occurs when **launching the App/program**: This is less likely now that large data strings are removed from the program text. Ensure your calculator has sufficient *initial* free RAM.
-    * If it occurs when selecting `LOADPRETRAIN` or `CLASSIFY`: This would mean the calculator doesn't have enough RAM to hold the matrices `[I]`, `[J]` and lists `L₄`, `L₅` (approx. 11.7KB) simultaneously with OS and other program needs. Maximize free RAM by deleting/archiving other items.
 * **`ERR:UNDEFINED` when running `CLASSIFY`:** This means one or more of `[I]`, `[J]`, `L₄`, or `L₅` were not successfully transferred to the calculator or were deleted. Re-transfer the `.8xm` and `.8xl` files.
-* **`ERR:INVALID DIM` during `CLASSIFY`:** This could indicate a mismatch between the dimensions expected by the TI-BASIC program (4-60-12) and the actual dimensions of the matrix/list files transferred. Ensure the CSV import and export process in SourceCoder/TokenIDE used the correct dimensions.
+* **`ERR:INVALID DIM` during `CLASSIFY`:** This could indicate a mismatch between the dimensions expected by the TI-BASIC program (4-60-12) and the actual dimensions of the matrix/list files transferred. Ensure the CSV import and export process in SourceCoder used the correct dimensions.
 * **Python Script Errors:** Ensure all Python dependencies are installed.
 * **File Paths:** Use correct relative or absolute paths when running Python scripts.
 
