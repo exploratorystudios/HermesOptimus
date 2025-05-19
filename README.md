@@ -7,7 +7,6 @@
 **Core Components:**
 
 1.  **TI-BASIC Program (`HERMES OPTIMUS.8xp`):**
-    * Internally displays "HERMES V14.2" (or your current version).
     * Performs word classification using the pre-loaded 4-60-12 neural network model.
     * Features a menu for classifying words and accessing information.
     * **Crucially, relies on the neural network model (matrices `[I]`, `[J]`, and lists `L₄`, `L₅`) being present in the calculator's RAM.** These files are created from CSVs using tools like SourceCoder/TokenIDE and then transferred by the user.
