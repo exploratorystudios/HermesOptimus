@@ -36,7 +36,6 @@ The degree of this robustness is directly correlated with the comprehensiveness 
 
 * **Word Classification:** Classifies user-inputted 4-letter words into one of the 12 categories, displaying the top two predicted words and their confidence scores.
 * **Direct Model Usage:** The program directly accesses matrices `[I]`, `[J]` and lists `L₄`, `L₅` from the calculator's RAM.
-* **Model Loading (`LOADPRETRAIN` - Lbl P):** This routine now primarily serves to confirm the presence of the necessary matrices/lists or to re-initialize them if needed (though the primary method is pre-loading them as files). The large data decompression from strings has been removed, significantly reducing program complexity and potential for memory errors during this step.
 * **User Interface:** Menu-driven for easy navigation.
 * **Neural Network Implementation:**
     * Architecture: 4-input, 60-hidden, 12-output feedforward neural network.
