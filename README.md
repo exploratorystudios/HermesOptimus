@@ -6,7 +6,7 @@
 
 **Core Components:**
 
-1.  **TI-BASIC Program (`HERMES OPTIMUS.8xp`):**
+1.  **TI-BASIC Program (`HERMES14.8xp`):**
     * Performs word classification using the pre-loaded 4-60-12 neural network model.
     * Features a menu for classifying words and accessing information.
     * **Crucially, relies on the neural network model (matrices `[I]`, `[J]`, and lists `L₄`, `L₅`) being present in the calculator's RAM.** These files are created from CSVs using tools like SourceCoder/TokenIDE and then transferred by the user.
@@ -69,7 +69,7 @@ The degree of this robustness is directly correlated with the comprehensiveness 
     3.  CSVs are converted to standard TI Matrix (`.8xm`) and List (`.8xl`) files using tools like Cemetech's SourceCoder.
     4.  These native TI files, along with the main program, are transferred to the calculator.
 * **Memory Efficiency:**
-    * The main program file (`HERMES OPTIMUS.8xp`) is smaller as it no longer contains embedded data strings for weights. This removes the `ERR:MEMORY` *when loading the program/App itself*.
+    * The main program file (`HERMES14.8xp`) is smaller as it no longer contains embedded data strings for weights. This removes the `ERR:MEMORY` *when loading the program/App itself*.
     * The calculator's RAM will be used to store the actual matrices `[I]`, `[J]` and lists `L₄`, `L₅` (approx. 12KB for a 4-60-12 network). This is more stable than manipulating very large strings in RAM.
 
 ## System Requirements
@@ -89,7 +89,7 @@ The degree of this robustness is directly correlated with the comprehensiveness 
 
 ### TI-84 Program ("Hermes Optimus"):
 
-1.  **Obtain Program:** Get the `HERMES OPTIMUS.8xp` file (this should have the simplified `Lbl P` that expects matrices/lists to be in RAM).
+1.  **Obtain Program:** Get the `HERMES14.8xp` file (this should have the simplified `Lbl P` that expects matrices/lists to be in RAM).
 2.  **Prepare Matrix/List Files:** Follow **Steps 1-3** in the "Usage Instructions & Workflow" section below to generate `[I].8xm`, `[J].8xm`, `L4.8xl`, and `L5.8xl` files or download the pretrained versions provided with Hermes Optimus.
 3.  **Transfer ALL Files:** Using TI Connect™ CE:
     * Click the "Calculator Explorer" icon (looks like two pages on the left toolbar).
@@ -158,7 +158,7 @@ This workflow details training, preparing data via CSVs and SourceCoder/TokenIDE
 3.  **Send Files:**
     * Click the "Calculator Explorer" icon (often on the left toolbar, may look like two pages).
     * Drag and drop the following files from your computer into the TI Connect CE window for your calculator (preferably into RAM):
-        * `HERMES OPTIMUS.8xp` (your main program file)
+        * `HERMES14.8xp` (your main program file)
         * `[I].8xm`
         * `[J].8xm`
         * `L4.8xl`
